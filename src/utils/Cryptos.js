@@ -2,5 +2,6 @@
 export const cryptos = {
     "TIME": 'wonderland',
     "OHM": 'olympus',
-    "KLIMA": 'klima-dao'
+    "KLIMA": 'klima-dao',
+    "BTC": "btc"
 }
