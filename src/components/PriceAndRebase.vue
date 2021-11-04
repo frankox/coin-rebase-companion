@@ -5,7 +5,12 @@
       <h1 id="price" >{{priceText}}</h1>
     </div>
     <div class="rebaseContainer">
-      <label for="rebase-rate-input">REBASE RATE: </label><input class="input-field" id="rebase-rate-input" placeholder="%" value = "0.599">
+      <label for="rebase-rate-input">REBASE RATE: </label>
+      <input v-show="isInputVisible" @auxclick="hideInput"
+             @blur="hideInput" @change="onRebaseRateChange"
+             class="input-field" id="rebase-rate-input"
+             ref="rebase-rate-input" placeholder="%" value="0.599">
+      <p  v-show="!isInputVisible" @click="showInput" id="rebase">{{rebaseText}}</p>
     </div>
   </div>
 </template>
@@ -19,11 +24,14 @@ export default{
   name: "PriceAndRebase",
   props : {
     crypto: String,
-    currency: String
+    currency: String,
   },
   data(){
     return{
-      priceText: "Loading..."
+      priceText: 'Loading...',
+      rebaseText: '0.599',
+      isInputVisible: false,
+      rebaseRateInput: '0.599'
     }
   },
   methods:{
@@ -32,6 +40,16 @@ export default{
         updatePriceData()
         this.priceText = getPrice()
       }, 3000)
+    },
+    showInput(){
+      this.isInputVisible = true
+    },
+    hideInput(){
+      this.isInputVisible = false
+    },
+    onRebaseRateChange(){
+      this.rebaseText = this.$refs["rebase-rate-input"].value
+      this.rebaseRateInput = this.rebaseText
     }
   },
   mounted() {
@@ -137,6 +155,10 @@ input {
   background: transparent;
   color: aliceblue;
   text-align: center;
+}
+p{
+  text-align: center;
+  color:aliceblue;
 }
 
 </style>
