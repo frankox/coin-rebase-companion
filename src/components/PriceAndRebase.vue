@@ -5,12 +5,7 @@
       <h1 id="price" >{{priceText}}</h1>
     </div>
     <div class="rebaseContainer">
-      <label for="rebase-rate-input">REBASE RATE: </label>
-      <input v-show="isInputVisible" @auxclick="hideInput"
-             @blur="hideInput" @change="onRebaseRateChange"
-             class="input-field" id="rebase-rate-input"
-             ref="rebase-rate-input" placeholder="%" value="0.599">
-      <p  v-show="!isInputVisible" @click="showInput" id="rebase">{{rebaseText}}</p>
+      <DynamicInput id="rebaseInput" default-rebase="0.599"/>
     </div>
   </div>
 </template>
@@ -18,20 +13,20 @@
 <script>
 import {coinData} from "@/utils/Apis";
 import {cryptos} from "@/utils/Cryptos";
-
+import DynamicInput from "@/components/DynamicInput";
 
 export default{
   name: "PriceAndRebase",
+  components: {
+    DynamicInput
+  },
   props : {
     crypto: String,
-    currency: String,
+    currency: String
   },
   data(){
     return{
       priceText: 'Loading...',
-      rebaseText: '0.599',
-      isInputVisible: false,
-      rebaseRateInput: '0.599'
     }
   },
   methods:{
@@ -40,16 +35,6 @@ export default{
         updatePriceData()
         this.priceText = getPrice()
       }, 3000)
-    },
-    showInput(){
-      this.isInputVisible = true
-    },
-    hideInput(){
-      this.isInputVisible = false
-    },
-    onRebaseRateChange(){
-      this.rebaseText = this.$refs["rebase-rate-input"].value
-      this.rebaseRateInput = this.rebaseText
     }
   },
   mounted() {
