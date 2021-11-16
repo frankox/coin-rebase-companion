@@ -18,32 +18,28 @@ export default {
   components: {DynamicInput},
   data(){
     return{
-      stakedValuePlaceholder: 'Loading...',
     }
   },
   computed:{
     stakedValue: ()=>{
-      this.$root.on('price_updated', (unitaryPrice)=>{
-        this.getStakedValue(unitaryPrice)
+      this.$root.on('staked_dynamic_input_value_changed', (unitaryPrice)=>{
+        return this.getStakedValue(unitaryPrice)
+      })
+    },
+    price: ()=>{
+      this.$root.on('price_updated', (price)=>{
+        return price
       })
     }
   },
 methods:{
-  setStakedValue(value){
-    this.stakedValue = value
-  },
   getStakedValue(value){
     const result =  Number(this.stakedValue) * Number(value)
     return result && result > 0? result: 'Loading...'
   },
   mounted(){
-    this.$root.on('price_updated', (unitaryPrice)=>{
-      this.setStakedValue(this.getStakedValue(unitaryPrice))
-      console.log("PUTANA")
-    })
-    this.$root.on('staked_dynamic_input_value_changed', (unitaryPrice)=>{
-      this.setStakedValue(this.getStakedValue(unitaryPrice))
-      console.log("PUTANA")
+    this.$root.on('price_updated', (price)=>{
+      this.price = price
     })
   }
 }

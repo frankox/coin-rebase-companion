@@ -43,7 +43,6 @@ export default{
           this.$root.$emit('price_updated', price)
           this.priceText = price
         }
-
       }, 3000)
     }
   },
