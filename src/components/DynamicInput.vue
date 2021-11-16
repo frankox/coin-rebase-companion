@@ -1,23 +1,25 @@
-<template>
-  <label for="rebase-rate-input">REBASE RATE: </label>
+<template id = "{{id}}">
+  <p class="subtext">{{title}}</p>
   <input v-show="isInputVisible" @auxclick="hideInput"
          @blur="hideInput" @change="onRebaseRateChange"
-         class="input-field" id="rebase-rate-input"
-         ref="rebase-rate-input" placeholder="%" value="0.599">
-  <p  v-show="!isInputVisible" @click="showInput" id="rebase">{{rebaseText}}</p>
+         class="input-field" id="di-input-part"
+         ref="dynamic-input-input" placeholder="%">
+  <p  v-show="!isInputVisible" @click="showInput" id="di-tex-part">{{ DITextPart }}</p>
 </template>
 
 <script>
 export default {
   name: "DynamicInput",
   props: {
-    defaultRebase: String
+    defaultValue: String,
+    title: String,
+    id: String
   },
   data(){
     return{
       isInputVisible: false,
-      rebaseRateInput: this.defaultRebase,
-      rebaseText: this.defaultRebase
+      rebaseRateInput: this.defaultValue,
+      DITextPart: this.defaultValue
     }
   },
   methods: {
@@ -28,8 +30,9 @@ export default {
       this.isInputVisible = false
     },
     onRebaseRateChange() {
-      this.rebaseText = this.$refs["rebase-rate-input"].value
-      this.rebaseRateInput = this.rebaseText
+      this.DITextPart = this.$refs["dynamic-input-input"].value
+      this.rebaseRateInput = this.DITextPart
+      this.$root.$emit(this.id + '_dynamic_input_value_changed', this.DITextPart)
     }
   }
 }
@@ -40,9 +43,19 @@ input {
   background: transparent;
   color: aliceblue;
   text-align: center;
+  font-size:1.5em;
+  margin-bottom: 7px;
 }
+
+.subtext {
+  font-size:1em;
+  text-transform:uppercase;
+  margin-bottom: 10px;
+}
+
 p{
   text-align: center;
   color:aliceblue;
+  font-size:1.5em;
 }
 </style>

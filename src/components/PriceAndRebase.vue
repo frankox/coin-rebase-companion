@@ -1,12 +1,15 @@
 <template>
-  <div class="container">
+  <div class="header">
     <div class="priceContainer" id="price-container">
       <p class="subtext">{{crypto}}/{{currency}}</p>
-      <h1 id="price" >{{priceText}}</h1>
+      <h1 id="price">{{priceText}}</h1>
     </div>
     <div class="rebaseContainer">
-      <DynamicInput id="rebaseInput" default-rebase="0.599"/>
+      <DynamicInput id="rebaseInput" title="REBASE RATE:" default-value="0.599"/>
     </div>
+  </div>
+  <div class="bodyRow">
+    <TotalStakedData/>
   </div>
 </template>
 
@@ -14,10 +17,12 @@
 import {coinData} from "@/utils/Apis";
 import {cryptos} from "@/utils/Cryptos";
 import DynamicInput from "@/components/DynamicInput";
+import TotalStakedData from "@/components/TotalStakedData";
 
 export default{
   name: "PriceAndRebase",
   components: {
+    TotalStakedData,
     DynamicInput
   },
   props : {
@@ -33,7 +38,12 @@ export default{
     updatePrice(){
       setInterval(()=>{
         updatePriceData()
-        this.priceText = getPrice()
+        const price = getPrice()
+        if(this.priceText !== price){
+          this.$root.$emit('price_updated', price)
+          this.priceText = price
+        }
+
       }, 3000)
     }
   },
@@ -99,30 +109,24 @@ function getPrice() {
 
 <style scoped>
 
-.container {
+.header {
   width:100%;
-  margin-top:10px;
   background:transparent;
   border-bottom: 3px solid #42b983;
-  display: grid;
-  grid-template-columns: 40% auto 40%;
-  align-items: center;
-  grid-auto-rows: minmax(50px, auto);
-  gap: 50px;
+  display: flex;
+  flex-direction: row;
 }
 
 .priceContainer{
-  margin-left: 20%;
   background:#353535;
   padding: 0 10px;
   text-align:center;
-  grid-column: 1;
-  grid-row: 1;
+  flex:1;
+  margin-bottom: 10px;
 }
 
 .rebaseContainer{
-  grid-column: 2/3;
-  grid-row: 1;
+  flex:2
 }
 
 .subtext {
@@ -136,14 +140,22 @@ h1 {
   align-self: center;
 }
 
-input {
-  background: transparent;
-  color: aliceblue;
-  text-align: center;
-}
 p{
   text-align: center;
   color:aliceblue;
 }
+
+.bodyRow {
+  width:100%;
+  margin-top:10px;
+  background:transparent;
+  border-bottom: 3px solid cadetblue;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  grid-auto-rows: minmax(50px, auto);
+  gap: 50px;
+}
+
 
 </style>
