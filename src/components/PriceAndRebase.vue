@@ -2,27 +2,23 @@
   <div class="header">
     <div class="priceContainer" id="price-container">
       <p class="subtext">{{crypto}}/{{currency}}</p>
-      <h1 id="price">{{priceText}}</h1>
+      <h1 id="price" >{{priceText}}</h1>
     </div>
     <div class="rebaseContainer">
       <DynamicInput id="rebaseInput" title="REBASE RATE:" default-value="0.599"/>
     </div>
   </div>
-  <div class="bodyRow">
-    <TotalStakedData/>
-  </div>
+
 </template>
 
 <script>
 import {coinData} from "@/utils/Apis";
 import {cryptos} from "@/utils/Cryptos";
 import DynamicInput from "@/components/DynamicInput";
-import TotalStakedData from "@/components/TotalStakedData";
 
 export default{
   name: "PriceAndRebase",
   components: {
-    TotalStakedData,
     DynamicInput
   },
   props : {
@@ -40,8 +36,9 @@ export default{
         updatePriceData()
         const price = getPrice()
         if(this.priceText !== price){
-          this.$root.$emit('price_updated', price)
           this.priceText = price
+          this.$emit('priceUpdated', price)
+          console.log('emit')
         }
       }, 3000)
     }
@@ -100,8 +97,6 @@ function getPrice() {
   }
   return 'Loading...'
 }
-
-
 //endregion
 
 </script>
@@ -143,18 +138,4 @@ p{
   text-align: center;
   color:aliceblue;
 }
-
-.bodyRow {
-  width:100%;
-  margin-top:10px;
-  background:transparent;
-  border-bottom: 3px solid cadetblue;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  grid-auto-rows: minmax(50px, auto);
-  gap: 50px;
-}
-
-
 </style>

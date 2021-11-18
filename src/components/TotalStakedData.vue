@@ -1,11 +1,11 @@
 <template>
   <div class="row">
     <div class="rowItem1">
-      <DynamicInput id="staked" title="STAKED:" default-value="1" />
+      <DynamicInput id="staked" title="STAKED:" default-value="1" @dio="stakedValue = onStakedAmountUpdated($event)"/>
     </div>
     <div class="rowItem2">
-      <h3 id="total-staked-value-title">EUR: </h3>
-      <span id="total-staked-value">{{stakedValue}}</span>
+      <h3 id="total-staked-value-title">{{ currencyText }}</h3>
+      <span id="total-staked-value" >{{stakedValue}}</span>
     </div>
   </div>
 </template>
@@ -16,33 +16,31 @@ import DynamicInput from "@/components/DynamicInput";
 export default {
   name: "TotalStakedData",
   components: {DynamicInput},
+  props:{
+    currencyText: String
+  },
   data(){
     return{
+      stakedValue: 'Loading...',
+      stakedAmount : '1',
+      price: '1'
     }
   },
-  computed:{
-    stakedValue: ()=>{
-      this.$root.on('staked_dynamic_input_value_changed', (unitaryPrice)=>{
-        return this.getStakedValue(unitaryPrice)
-      })
+  methods:{
+    onStakedAmountUpdated(stakedAmount){
+      this.stakedAmount = stakedAmount
+      return this.calculateStakedValue(Number(stakedAmount), Number(this.price))
     },
-    price: ()=>{
-      this.$root.on('price_updated', (price)=>{
-        return price
-      })
-    }
-  },
-methods:{
-  getStakedValue(value){
-    const result =  Number(this.stakedValue) * Number(value)
-    return result && result > 0? result: 'Loading...'
-  },
-  mounted(){
-    this.$root.on('price_updated', (price)=>{
+    onPriceUpdated(price){
+      console.log(price)
       this.price = price
-    })
+      return this.calculateStakedValue(Number(this.stakedAmount), Number(price))
+    },
+    calculateStakedValue(amount, value){
+      const result =  amount * value
+      return result && result > 0? result: 'Loading...'
+    }
   }
-}
 }
 </script>
 

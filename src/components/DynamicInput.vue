@@ -4,12 +4,16 @@
          @blur="hideInput" @change="onRebaseRateChange"
          class="input-field" id="di-input-part"
          ref="dynamic-input-input" placeholder="%">
-  <p  v-show="!isInputVisible" @click="showInput" id="di-tex-part">{{ DITextPart }}</p>
+  <p  v-show="!isInputVisible" @click="showInput"
+      id="di-tex-part" @change="$emit('dio', DITextPart)">
+    {{ DITextPart }}
+  </p>
 </template>
 
 <script>
 export default {
   name: "DynamicInput",
+  emits: ['dio'],
   props: {
     defaultValue: String,
     title: String,
@@ -32,7 +36,6 @@ export default {
     onRebaseRateChange() {
       this.DITextPart = this.$refs["dynamic-input-input"].value
       this.rebaseRateInput = this.DITextPart
-      this.$root.$emit(this.id + '_dynamic_input_value_changed', this.DITextPart)
     }
   }
 }
